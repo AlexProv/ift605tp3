@@ -37,11 +37,11 @@ public class CentralIntelligenceAgency {
 			TreeMap<Integer, TreeSet<Integer> > bN = (TreeMap<Integer, TreeSet<Integer>>) noeuds.subMap(taille, 2*taille);
 			TreeMap<Integer, TreeSet<Integer> > cN = (TreeMap<Integer, TreeSet<Integer>>) noeuds.subMap(2*taille, noeudsKeys.size());
 			o1[0] = aN;
-			AgentController a1 = cc.createNewAgent("Agent1", agentColoriant.class.getName(), o1);
+			AgentController a1 = cc.createNewAgent("Agent1", AgentColoriant.class.getName(), o1);
 			o2[0] = bN;
-			AgentController a2 = cc.createNewAgent("Agent2", agentColoriant.class.getName(), o2);
+			AgentController a2 = cc.createNewAgent("Agent2", AgentColoriant.class.getName(), o2);
 			o3[0] = cN;
-			AgentController a3 = cc.createNewAgent("Agent3", agentColoriant.class.getName(), o3);
+			AgentController a3 = cc.createNewAgent("Agent3", AgentColoriant.class.getName(), o3);
 			
 			a1.start();
 			a2.start();
