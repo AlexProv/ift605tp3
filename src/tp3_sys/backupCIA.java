@@ -6,8 +6,6 @@ import jade.core.ProfileImpl;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
@@ -35,32 +33,9 @@ public class CentralIntelligenceAgency {
 			Set<Integer> noeudsKeys = noeuds.keySet(); 
 			int taille = noeudsKeys.size() / NB_AGENT;
 			
-			TreeMap<Integer, TreeSet<Integer>> aN = new TreeMap<Integer, TreeSet<Integer>>();
-			TreeMap<Integer, TreeSet<Integer>> bN = new TreeMap<Integer, TreeSet<Integer>>();
-			TreeMap<Integer, TreeSet<Integer>> cN = new TreeMap<Integer, TreeSet<Integer>>();
-			
-			Iterator it = noeuds.entrySet().iterator();
-			int cpt = 0;
-			while(it.hasNext())
-			{
-		        Map.Entry pairs = (Map.Entry)it.next();
-				if(cpt < taille)
-				{
-					aN.put((Integer)pairs.getKey(),(TreeSet<Integer>)pairs.getValue());
-				}
-				else
-				{
-					if(cpt < 2*taille)
-					{
-						bN.put((Integer)pairs.getKey(),(TreeSet<Integer>)pairs.getValue());
-					}
-					else
-					{
-						cN.put((Integer)pairs.getKey(),(TreeSet<Integer>)pairs.getValue());
-					}
-				}
-			}
-			
+			TreeMap<Integer, TreeSet<Integer> > aN = (TreeMap<Integer, TreeSet<Integer>>) noeuds.subMap(0, taille);
+			TreeMap<Integer, TreeSet<Integer> > bN = (TreeMap<Integer, TreeSet<Integer>>) noeuds.subMap(taille, 2*taille);
+			TreeMap<Integer, TreeSet<Integer> > cN = (TreeMap<Integer, TreeSet<Integer>>) noeuds.subMap(2*taille, noeudsKeys.size());
 			o1[0] = aN;
 			AgentController a1 = cc.createNewAgent("Agent1", AgentColoriant.class.getName(), o1);
 			o2[0] = bN;
@@ -72,9 +47,8 @@ public class CentralIntelligenceAgency {
 			a2.start();
 			a3.start();
 		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
+		catch(Exception E){}
+
 	}
 	
 	 private TreeMap<Integer, TreeSet<Integer> > noeuds;
