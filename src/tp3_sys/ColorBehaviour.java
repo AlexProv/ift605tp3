@@ -25,7 +25,7 @@ public class ColorBehaviour extends MessagingBehaviour{
 	@Override
 	public void action() {
 		// TODO Auto-generated method stub
-		
+		/*
 		ACLMessage  msg = myAgent.receive();
 		if(msg != null){
 
@@ -35,7 +35,11 @@ public class ColorBehaviour extends MessagingBehaviour{
 		else {
 			block();
 		}
+		*/
 		
+		TreeMap<Integer, Integer> test = initialisateurCouleur(100);
+		
+		System.out.println("a");
 		//equivalent de ton RUN dans un thread Ben
 		System.out.println("ben travail!");
 		
