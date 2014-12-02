@@ -83,22 +83,16 @@ public class ColorBehaviour extends MessagingBehaviour{
 	
 	
 	
-	private TreeMap<Integer, Integer> wantedColor(int nbCouleur, TreeMap<Integer, Integer> couleurVoulue)
+	private TreeMap<Integer, Integer> notWantedColor(int nbCouleur, TreeMap< Integer, TreeSet<Integer>> couleurNonVoulue)
 	{
 		TreeMap<Integer, TreeSet<Integer>> couleurPossible = new TreeMap<Integer, TreeSet<Integer>>();
 		ArrayList<Integer> elementNonColorie = new ArrayList<Integer>();
-		
-		for(Integer noeud : couleurVoulue.keySet())
-		{
-			noeuds.remove(noeud);
-		}
 		
 		for(Integer key : noeuds.keySet())
 		{	
 			couleurPossible.put(key, new TreeSet<Integer>());
 			elementNonColorie.add(key);
 		}
-		
 		
 		for(Map.Entry<Integer, TreeSet<Integer>> entry : couleurPossible.entrySet())
 		{
@@ -108,7 +102,17 @@ public class ColorBehaviour extends MessagingBehaviour{
 			}
 		}
 		
-		TreeMap<Integer, Integer> resultat = colorieur(couleurVoulue, couleurPossible);
+		for(Integer noeud : couleurNonVoulue.keySet())
+		{
+			for(Integer i :couleurNonVoulue.get(noeud))
+			{
+				TreeSet<Integer> couleurPotentiel = couleurPossible.get(noeud);
+				couleurPotentiel.remove(i);
+				couleurPossible.put(noeud, couleurPotentiel);
+			}
+		}
+		
+		TreeMap<Integer, Integer> resultat = colorieur(new TreeMap<Integer, Integer>(), couleurPossible);
 		if(resultat == null)
 		{
 			//TODO envoye erreur pas possible colorier avec les contraintes de couleur demande
