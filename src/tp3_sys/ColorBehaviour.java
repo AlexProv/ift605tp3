@@ -109,17 +109,41 @@ public class ColorBehaviour extends MessagingBehaviour{
 		{
 			Entry<Integer, TreeSet<Integer>> entry  = couleurPossible.firstEntry();
 			TreeSet<Integer> tree = entry.getValue();
+			Integer noeudCourant = entry.getKey();
 			
-			TreeMap<Integer, TreeSet<Integer>> tmp = (TreeMap<Integer, TreeSet<Integer>>) couleurPossible.clone();
-			
-			for(Integer i : tree)
+			TreeMap<Integer, TreeSet<Integer>> cloneCouleurPossible = (TreeMap<Integer, TreeSet<Integer>>) couleurPossible.clone();
+			TreeMap<Integer, Integer> cloneCouleur = (TreeMap<Integer, Integer>) couleur.clone();
+			for(Integer couleurPotentiel : entry.getValue())
 			{
-				couleur.put(entry.getKey(), i);
-				entry.getKey();
+				couleur.put(noeudCourant, couleurPotentiel);
+				cloneCouleurPossible.remove(noeudCourant);
+				
+				// retire les couleurs non permises
+				for(Integer i : noeuds.get(noeudCourant))
+				{
+					TreeSet<Integer> couleurPourNoeud = cloneCouleurPossible.get(i);
+					if(couleurPourNoeud != null)
+					{
+						couleurPourNoeud.remove(couleurPotentiel);
+						cloneCouleurPossible.put(i,couleurPourNoeud);
+					}
+				}				
+				
+				cloneCouleur.put(noeudCourant, couleurPotentiel);
+				
+				TreeMap<Integer, Integer> resultat = colorieur(cloneCouleur, cloneCouleurPossible);
+				if(resultat != null)
+				{
+					return resultat;
+				}
+				else
+				{
+					cloneCouleur.remove(noeudCourant);
+				}
+				
 			}
 		}
 		
 		return null;
 	}
-
 }
