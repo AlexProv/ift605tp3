@@ -56,13 +56,13 @@ public class CentralIntelligenceAgency {
 			while(it.hasNext())
 			{
 		        Map.Entry pairs = (Map.Entry)it.next();
-				if(cpt < taille)
+				if(cpt < 8)
 				{
 					aN.put((Integer)pairs.getKey(),(TreeSet<Integer>)pairs.getValue());
 				}
 				else
 				{
-					if(cpt < 2*taille)
+					if(cpt < 13)
 					{
 						bN.put((Integer)pairs.getKey(),(TreeSet<Integer>)pairs.getValue());
 					}

@@ -38,7 +38,14 @@ public class ColorBehaviour extends MessagingBehaviour{
 		*/
 		
 		TreeMap<Integer, Integer> test = initialisateurCouleur(100);
-		
+		TreeMap< Integer, TreeSet<Integer>> cnv = new TreeMap< Integer, TreeSet<Integer>>();
+		TreeSet<Integer> a = new TreeSet<Integer>();
+		a.add(0);
+		cnv.put(1, a);
+		a = new TreeSet<Integer>();
+		a.add(0);
+		cnv.put(2, a);
+		TreeMap<Integer, Integer> testa = notWantedColor(100, cnv);
 		System.out.println("a");
 		//equivalent de ton RUN dans un thread Ben
 		System.out.println("ben travail!");
