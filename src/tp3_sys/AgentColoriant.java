@@ -1,11 +1,14 @@
 package tp3_sys;
 
+import jade.core.Agent;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+
 import java.io.IOException;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
-import jade.core.Agent;
-import jade.core.AID;
 
 public class AgentColoriant extends Agent{
 
@@ -16,11 +19,26 @@ public class AgentColoriant extends Agent{
 		
 		addBehaviour(new ColorBehaviour((Agent)this,noeuds));
 		
+		DFAgentDescription dfd = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription();   
+		sd.setType("AgentColoriant"); 
+		sd.setName(getName());
+		sd.setOwnership("ift605");
+		dfd.setName(getAID());
+		dfd.addServices(sd);
+		
         try {
+        	DFService.register(this,dfd);
+        	
 			Runtime.getRuntime().exec("clear");
 		} catch (IOException e) {
 			//TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+        catch (FIPAException fe)
+		{
+			doDelete();
+
 		}
 	}
 	

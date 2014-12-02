@@ -6,11 +6,11 @@ import java.util.Map.Entry;
 import java.util.TreeSet;
 import java.util.TreeMap;
 
-public class Agent {
+public class AgentCoquin {
 	
 	TreeMap< Integer, TreeSet<Integer> > noeuds;
 	
-	public Agent (TreeMap< Integer, TreeSet<Integer> > noeuds)
+	public AgentCoquin(TreeMap< Integer, TreeSet<Integer> > noeuds)
 	{
 		this.noeuds = noeuds;
 	}
