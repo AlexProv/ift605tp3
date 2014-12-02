@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
@@ -87,6 +88,33 @@ public class CentralIntelligenceAgency {
 		catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	public static String treeToString(TreeMap<Integer, Integer> tree)
+	{
+		StringBuilder builder = new StringBuilder();
+		
+		for(Entry<Integer, Integer> i : tree.entrySet())
+		{
+			builder.append(i.getKey() + " " + i.getValue() + "\n" );
+		}
+		return builder.toString();
+	}
+	
+	public static TreeMap<Integer, Integer>  stringToTree(String s)
+	{		
+		TreeMap<Integer, Integer> tree = new TreeMap<Integer, Integer>();
+		 
+		 StringTokenizer tokenizer = new StringTokenizer(s);
+		 
+		 while (tokenizer.hasMoreTokens()) {
+			 Integer token = Integer.parseInt(tokenizer.nextToken());
+			 Integer token1 = Integer.parseInt(tokenizer.nextToken());
+			 
+			 tree.put(token,token1);
+	     }
+		 
+		 return tree;
 	}
 	
 	 
