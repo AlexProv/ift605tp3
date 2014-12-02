@@ -2,7 +2,7 @@ package tp3_sys;
 
 import jade.core.behaviours.Behaviour;
 
-public class Colorbehaviour extends Behaviour{
+public class ColorBehaviour extends Behaviour{
 
 	@Override
 	public void action() {
