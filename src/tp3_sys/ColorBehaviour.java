@@ -7,14 +7,17 @@ import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import jade.core.Agent;
-import jade.core.behaviours.Behaviour;
+import jade.lang.acl.ACLMessage;
 
-public class ColorBehaviour extends Behaviour{
+public class ColorBehaviour extends MessagingBehaviour{
 	
 	TreeMap< Integer, TreeSet<Integer>> noeuds;
+	Agent agent;
+	String agentLocalName;
 	
 	public ColorBehaviour(Agent a, TreeMap< Integer, TreeSet<Integer>> noeuds) {
 		super(a);
+		this.agent = a; 
 		this.noeuds = noeuds;
 	}
 	
@@ -22,19 +25,22 @@ public class ColorBehaviour extends Behaviour{
 	@Override
 	public void action() {
 		// TODO Auto-generated method stub
-		//equivalent de ton RUN dans un thread Ben
-		while(true)
-		{
-			System.out.println("ben travail!");
+		
+		ACLMessage  msg = myAgent.receive();
+		if(msg != null){
+
+			agent.send(formateReplyWithLog(msg));
+			
 		}
+		else {
+			block();
+		}
+		
+		//equivalent de ton RUN dans un thread Ben
+		System.out.println("ben travail!");
+		
 	}
 
-	@Override
-	public boolean done() {
-		// TODO Auto-generated method stub
-		//self explanatory 
-		return false;
-	}
 	
 	
 	private Object initialisateurCouleur(int nbCouleur)

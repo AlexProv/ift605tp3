@@ -15,7 +15,8 @@ public class MessagingBehaviour extends CyclicBehaviour {
 		super(a);
 		agent = a;
 	}
-
+	
+	
 	@Override
 	public void action() {
 		ACLMessage  msg = myAgent.receive();
@@ -28,7 +29,7 @@ public class MessagingBehaviour extends CyclicBehaviour {
 		}
 	}
 	
-	private ACLMessage formateReplyWithLog(ACLMessage msg)
+	protected ACLMessage formateReplyWithLog(ACLMessage msg)
 	{
 		ACLMessage reply = msg.createReply();
 
@@ -57,7 +58,7 @@ public class MessagingBehaviour extends CyclicBehaviour {
 		return reply;
 	}
 	
-	private ACLMessage formateReply(ACLMessage msg)
+	protected ACLMessage formateReply(ACLMessage msg)
 	{
 		ACLMessage reply = msg.createReply();
 
