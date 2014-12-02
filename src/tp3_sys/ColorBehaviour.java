@@ -43,7 +43,7 @@ public class ColorBehaviour extends MessagingBehaviour{
 
 	
 	
-	private Object initialisateurCouleur(int nbCouleur)
+	private TreeMap<Integer, Integer> initialisateurCouleur(int nbCouleur)
 	{
 		TreeMap<Integer, TreeSet<Integer>> couleurPossible = new TreeMap<Integer, TreeSet<Integer>>();
 		ArrayList<Integer> elementNonColorie = new ArrayList<Integer>();
@@ -65,8 +65,16 @@ public class ColorBehaviour extends MessagingBehaviour{
 		}
 		
 		
-		
-		return null;
+		TreeMap<Integer, Integer> resultat = colorieur(new TreeMap<Integer, Integer>(), couleurPossible);
+		if(resultat == null)
+		{
+			//TODO envoye erreur pas possible colorier avec si peu de couleur
+		}
+		else
+		{
+			// OK!
+		}
+		return resultat;
 	}
 	
 	
@@ -95,7 +103,17 @@ public class ColorBehaviour extends MessagingBehaviour{
 				entry.getValue().add(i);
 			}
 		}
-		return null;
+		
+		TreeMap<Integer, Integer> resultat = colorieur(couleurVoulue, couleurPossible);
+		if(resultat == null)
+		{
+			//TODO envoye erreur pas possible colorier avec les contraintes de couleur demande
+		}
+		else
+		{
+			// OK!
+		}
+		return resultat;
 	}
 	
 	
