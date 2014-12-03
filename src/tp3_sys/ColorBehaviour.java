@@ -111,11 +111,14 @@ public class ColorBehaviour extends MessagingBehaviour{
 		
 		for(Integer noeud : couleurNonVoulue.keySet())
 		{
-			for(Integer i :couleurNonVoulue.get(noeud))
+			if(couleurPossible.get(noeud) != null)
 			{
-				TreeSet<Integer> couleurPotentiel = couleurPossible.get(noeud);
-				couleurPotentiel.remove(i);
-				couleurPossible.put(noeud, couleurPotentiel);
+				for(Integer i :couleurNonVoulue.get(noeud))
+				{
+					TreeSet<Integer> couleurPotentiel = couleurPossible.get(noeud);
+					couleurPotentiel.remove(i);
+					couleurPossible.put(noeud, couleurPotentiel);
+				}
 			}
 		}
 		
