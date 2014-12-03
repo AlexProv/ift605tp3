@@ -17,8 +17,10 @@ import sun.org.mozilla.javascript.internal.ObjArray;
 
 public class CentralIntelligenceAgency {
 	
+	public static final int NB_AGENT = 3;	
+	
 	public static void main(String[] args) {
-		final int NB_AGENT = 3;
+
 		
 		jade.core.Runtime rt = jade.core.Runtime.instance();
 		Profile p = new ProfileImpl();
@@ -29,9 +31,12 @@ public class CentralIntelligenceAgency {
 		noeuds = new TreeMap<Integer, TreeSet<Integer>>();
 		
 		try{
+			Object[] oArbitre = new Object[1];
 			Object[] o1 = new Object[1];
 			Object[] o2 = new Object[1];
 			Object[] o3 = new Object[1];
+
+			
 			Set<Integer> noeudsKeys = noeuds.keySet(); 
 			int taille = noeudsKeys.size() / NB_AGENT;
 			
@@ -60,17 +65,18 @@ public class CentralIntelligenceAgency {
 					}
 				}
 			}
-			
 			o1[0] = aN;
 			AgentController a1 = cc.createNewAgent("Agent1", AgentColoriant.class.getName(), o1);
 			o2[0] = bN;
 			AgentController a2 = cc.createNewAgent("Agent2", AgentColoriant.class.getName(), o2);
 			o3[0] = cN;
 			AgentController a3 = cc.createNewAgent("Agent3", AgentColoriant.class.getName(), o3);
-			
+
+			AgentController aArbitre = cc.createNewAgent("AgentArbitre", AgentArbitre.class.getName(), oArbitre);
 			a1.start();
 			a2.start();
 			a3.start();
+			aArbitre.start();
 		}
 		catch(Exception e){
 			e.printStackTrace();

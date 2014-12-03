@@ -17,28 +17,14 @@ public class AgentColoriant extends Agent{
 		Object[] args = getArguments();
 		TreeMap< Integer, TreeSet<Integer> > noeuds = (TreeMap< Integer, TreeSet<Integer> >)args[0];
 		
-		addBehaviour(new ColorBehaviour((Agent)this,noeuds));
-		
-		DFAgentDescription dfd = new DFAgentDescription();
-		ServiceDescription sd = new ServiceDescription();   
-		sd.setType("AgentColoriant"); 
-		sd.setName(getName());
-		sd.setOwnership("ift605");
-		dfd.setName(getAID());
-		dfd.addServices(sd);
+		addBehaviour(new ColorBehaviour(this,noeuds));
 		
         try {
-        	DFService.register(this,dfd);
         	
 			Runtime.getRuntime().exec("clear");
 		} catch (IOException e) {
 			//TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-        catch (FIPAException fe)
-		{
-			doDelete();
-
 		}
 	}
 	

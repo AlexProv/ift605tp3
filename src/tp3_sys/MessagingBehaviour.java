@@ -1,13 +1,11 @@
 package tp3_sys;
 
 import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.*;
 import jade.lang.acl.ACLMessage;
 import jade.util.Logger;
 
-public class MessagingBehaviour extends CyclicBehaviour {
-	
-	private Logger myLogger = Logger.getMyLogger(getClass().getName());
+public class MessagingBehaviour extends Behaviour {
 	Agent agent;
 	String agentLocalName;
 	
@@ -53,7 +51,7 @@ public class MessagingBehaviour extends CyclicBehaviour {
 			System.out.println("Agent " + agent.getLocalName() + " - Unexpected message [" + 
 					ACLMessage.getPerformative(msg.getPerformative()) + "] received from " + msg.getSender().getLocalName());
 			reply.setPerformative(ACLMessage.NOT_UNDERSTOOD);
-			reply.setContent("( (Unexpected-act " + ACLMessage.getPerformative(msg.getPerformative()) + ") )");   
+			reply.setContent("( (Unexpected-act " + ACLMessage.getPerformative(msg.getPerformative()) + ") )");
 		}
 		return reply;
 	}
@@ -79,5 +77,12 @@ public class MessagingBehaviour extends CyclicBehaviour {
 			reply.setContent("( (Unexpected-act " + ACLMessage.getPerformative(msg.getPerformative()) + ") )");   
 		}
 		return reply;
+	}
+
+
+	@Override
+	public boolean done() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
