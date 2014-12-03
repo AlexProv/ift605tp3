@@ -6,22 +6,34 @@ import jade.core.ProfileImpl;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import sun.org.mozilla.javascript.internal.ObjArray;
 
 public class CentralIntelligenceAgency {
 	
 	public static final int NB_AGENT = 3;	
 	
-	public static void main(String[] args) {
-
+	public static void main(String[] args) throws IOException {
+		BufferedReader saveFile = new BufferedReader(new FileReader("graph.grr"));
+		String aux = "";
+		StringBuilder builder = new StringBuilder();
 		
+		while((aux = saveFile.readLine()) != null)
+		{
+			builder.append(aux + '\n');
+		}
+		String data = builder.toString();
+		TreeMap<Integer, TreeSet<Integer> > graph = graphBuilder(data);
+
 		jade.core.Runtime rt = jade.core.Runtime.instance();
 		Profile p = new ProfileImpl();
 
@@ -35,8 +47,6 @@ public class CentralIntelligenceAgency {
 			Object[] o1 = new Object[1];
 			Object[] o2 = new Object[1];
 			Object[] o3 = new Object[1];
-
-			
 			Set<Integer> noeudsKeys = noeuds.keySet(); 
 			int taille = noeudsKeys.size() / NB_AGENT;
 			
@@ -49,13 +59,13 @@ public class CentralIntelligenceAgency {
 			while(it.hasNext())
 			{
 		        Map.Entry pairs = (Map.Entry)it.next();
-				if(cpt < taille)
+				if(cpt < 8)
 				{
 					aN.put((Integer)pairs.getKey(),(TreeSet<Integer>)pairs.getValue());
 				}
 				else
 				{
-					if(cpt < 2*taille)
+					if(cpt < 13)
 					{
 						bN.put((Integer)pairs.getKey(),(TreeSet<Integer>)pairs.getValue());
 					}
@@ -66,6 +76,7 @@ public class CentralIntelligenceAgency {
 				}
 			}
 			o1[0] = aN;
+			o1[0] = graph;
 			AgentController a1 = cc.createNewAgent("Agent1", AgentColoriant.class.getName(), o1);
 			o2[0] = bN;
 			AgentController a2 = cc.createNewAgent("Agent2", AgentColoriant.class.getName(), o2);
@@ -83,20 +94,54 @@ public class CentralIntelligenceAgency {
 		}
 	}
 	
-	 private TreeMap<Integer, TreeSet<Integer> > noeuds;
+	 public static String treeToString(TreeMap<Integer, Integer> tree)
+	{
+		StringBuilder builder = new StringBuilder();
+		
+		for(Entry<Integer, Integer> i : tree.entrySet())
+		{
+			builder.append(i.getKey() + " " + i.getValue() + "\n" );
+		}
+		return builder.toString();
+	}
+	
+	public static TreeMap<Integer, Integer>  stringToTree(String s)
+	{		
+		TreeMap<Integer, Integer> tree = new TreeMap<Integer, Integer>();
+		 
+		 StringTokenizer tokenizer = new StringTokenizer(s);
+		 
+		 while (tokenizer.hasMoreTokens()) {
+			 Integer token = Integer.parseInt(tokenizer.nextToken());
+			 Integer token1 = Integer.parseInt(tokenizer.nextToken());
+			 
+			 tree.put(token,token1);
+	     }
+		 
+		 return tree;
+	}
+	
 	 
-	 public CentralIntelligenceAgency(String fichierTexte,TreeMap<Integer, TreeSet<Integer> > noeuds)
+	 static public TreeMap<Integer, TreeSet<Integer> > graphBuilder(String fichierTexte)
 	 {
+		 TreeMap<Integer, TreeSet<Integer> > tmpNoeuds = new TreeMap<Integer, TreeSet<Integer> >();
+		 
 		 StringTokenizer tokenizer = new StringTokenizer(fichierTexte);
 		 
 		 while (tokenizer.hasMoreTokens()) {
-			 Integer token = Integer.getInteger(tokenizer.nextToken());
-			 Integer token1 = Integer.getInteger(tokenizer.nextToken());
-			 ajouterNoeud(token,token1,noeuds);
+			 //System.out.println(tokenizer.nextToken());
+			 //System.out.println(tokenizer.nextToken());
+			 Integer token = Integer.parseInt(tokenizer.nextToken());
+			 Integer token1 = Integer.parseInt(tokenizer.nextToken());
+			 //System.out.println(tokenizer.nextToken());
+			 
+			 ajouterNoeud(token,token1,tmpNoeuds);
 	     }
+		 
+		 return tmpNoeuds;
 	 }
 	 
-	 private void ajouterNoeud(Integer a, Integer b,TreeMap<Integer, TreeSet<Integer> > noeuds)
+	 static private void ajouterNoeud(Integer a, Integer b,TreeMap<Integer, TreeSet<Integer> > noeuds)
 	 {
 		 TreeSet<Integer> tmp = noeuds.get(a);
 		 if(tmp == null)

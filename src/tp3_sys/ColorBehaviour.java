@@ -36,6 +36,16 @@ public class ColorBehaviour extends MessagingBehaviour{
 			block();
 		}
 		
+		TreeMap<Integer, Integer> test = initialisateurCouleur(100);
+		TreeMap< Integer, TreeSet<Integer>> cnv = new TreeMap< Integer, TreeSet<Integer>>();
+		TreeSet<Integer> a = new TreeSet<Integer>();
+		a.add(0);
+		cnv.put(1, a);
+		a = new TreeSet<Integer>();
+		a.add(0);
+		cnv.put(2, a);
+		TreeMap<Integer, Integer> testa = notWantedColor(100, cnv);
+		System.out.println("a");
 		//equivalent de ton RUN dans un thread Ben
 		System.out.println("ben travail!");
 		
@@ -43,7 +53,7 @@ public class ColorBehaviour extends MessagingBehaviour{
 
 	
 	
-	private Object initialisateurCouleur(int nbCouleur)
+	private TreeMap<Integer, Integer> initialisateurCouleur(int nbCouleur)
 	{
 		TreeMap<Integer, TreeSet<Integer>> couleurPossible = new TreeMap<Integer, TreeSet<Integer>>();
 		ArrayList<Integer> elementNonColorie = new ArrayList<Integer>();
@@ -65,28 +75,30 @@ public class ColorBehaviour extends MessagingBehaviour{
 		}
 		
 		
-		
-		return null;
+		TreeMap<Integer, Integer> resultat = colorieur(new TreeMap<Integer, Integer>(), couleurPossible);
+		if(resultat == null)
+		{
+			//TODO envoye erreur pas possible colorier avec si peu de couleur
+		}
+		else
+		{
+			// OK!
+		}
+		return resultat;
 	}
 	
 	
 	
-	private TreeMap<Integer, Integer> wantedColor(int nbCouleur, TreeMap<Integer, Integer> couleurVoulue)
+	private TreeMap<Integer, Integer> notWantedColor(int nbCouleur, TreeMap< Integer, TreeSet<Integer>> couleurNonVoulue)
 	{
 		TreeMap<Integer, TreeSet<Integer>> couleurPossible = new TreeMap<Integer, TreeSet<Integer>>();
 		ArrayList<Integer> elementNonColorie = new ArrayList<Integer>();
-		
-		for(Integer noeud : couleurVoulue.keySet())
-		{
-			noeuds.remove(noeud);
-		}
 		
 		for(Integer key : noeuds.keySet())
 		{	
 			couleurPossible.put(key, new TreeSet<Integer>());
 			elementNonColorie.add(key);
 		}
-		
 		
 		for(Map.Entry<Integer, TreeSet<Integer>> entry : couleurPossible.entrySet())
 		{
@@ -95,7 +107,30 @@ public class ColorBehaviour extends MessagingBehaviour{
 				entry.getValue().add(i);
 			}
 		}
-		return null;
+		
+		for(Integer noeud : couleurNonVoulue.keySet())
+		{
+			if(couleurPossible.get(noeud) != null)
+			{
+				for(Integer i :couleurNonVoulue.get(noeud))
+				{
+					TreeSet<Integer> couleurPotentiel = couleurPossible.get(noeud);
+					couleurPotentiel.remove(i);
+					couleurPossible.put(noeud, couleurPotentiel);
+				}
+			}
+		}
+		
+		TreeMap<Integer, Integer> resultat = colorieur(new TreeMap<Integer, Integer>(), couleurPossible);
+		if(resultat == null)
+		{
+			//TODO envoye erreur pas possible colorier avec les contraintes de couleur demande
+		}
+		else
+		{
+			// OK!
+		}
+		return resultat;
 	}
 	
 	
@@ -109,13 +144,38 @@ public class ColorBehaviour extends MessagingBehaviour{
 		{
 			Entry<Integer, TreeSet<Integer>> entry  = couleurPossible.firstEntry();
 			TreeSet<Integer> tree = entry.getValue();
+			Integer noeudCourant = entry.getKey();
 			
-			TreeMap<Integer, TreeSet<Integer>> tmp = (TreeMap<Integer, TreeSet<Integer>>) couleurPossible.clone();
-			
-			for(Integer i : tree)
+			TreeMap<Integer, TreeSet<Integer>> cloneCouleurPossible = (TreeMap<Integer, TreeSet<Integer>>) couleurPossible.clone();
+			TreeMap<Integer, Integer> cloneCouleur = (TreeMap<Integer, Integer>) couleur.clone();
+			for(Integer couleurPotentiel : entry.getValue())
 			{
-				couleur.put(entry.getKey(), i);
-				entry.getKey();
+				couleur.put(noeudCourant, couleurPotentiel);
+				cloneCouleurPossible.remove(noeudCourant);
+				
+				// retire les couleurs non permises
+				for(Integer i : noeuds.get(noeudCourant))
+				{
+					TreeSet<Integer> couleurPourNoeud = cloneCouleurPossible.get(i);
+					if(couleurPourNoeud != null)
+					{
+						couleurPourNoeud.remove(couleurPotentiel);
+						cloneCouleurPossible.put(i,couleurPourNoeud);
+					}
+				}				
+				
+				cloneCouleur.put(noeudCourant, couleurPotentiel);
+				
+				TreeMap<Integer, Integer> resultat = colorieur(cloneCouleur, cloneCouleurPossible);
+				if(resultat != null)
+				{
+					return resultat;
+				}
+				else
+				{
+					cloneCouleur.remove(noeudCourant);
+				}
+				
 			}
 		}
 		
