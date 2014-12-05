@@ -43,76 +43,83 @@ public class ArbitreBehaviour extends MessagingBehaviour{
 	
 		//arbiter logic
 		ACLMessage msg = agent.receive();
-		if(msg.getPerformative()== ACLMessage.REQUEST){
-			String agentName = msg.getSender().getLocalName();
-			String resultData = msg.getContent();
-			TreeMap<Integer, Integer> result = CentralIntelligenceAgency.stringToTree(resultData);
-			
-			agentResults.put(agentName, result);
-			TreeMap<Integer, Integer> tester = new TreeMap<Integer, Integer>();
-			
-			boolean conflit = false; 
-			agentloop: for(String key : agentResults.keySet())
-			{
-				TreeMap<Integer, Integer> agentAnswer = agentResults.get(key); //get agent solutions
+		if(msg != null)
+		{
+			if(msg.getPerformative()== ACLMessage.REQUEST){
+				String agentName = msg.getSender().getLocalName();
+				String resultData = msg.getContent();
+				TreeMap<Integer, Integer> result = CentralIntelligenceAgency.stringToTree(resultData);
 				
-				for(Integer nKey : agentAnswer.keySet()) //for all 
+				agentResults.put(agentName, result);
+				TreeMap<Integer, Integer> tester = new TreeMap<Integer, Integer>();
+				
+				boolean conflit = false; 
+				agentloop: for(String key : agentResults.keySet())
 				{
-					if(tester.get(nKey) == null)
+					TreeMap<Integer, Integer> agentAnswer = agentResults.get(key); //get agent solutions
+					
+					for(Integer nKey : agentAnswer.keySet()) //for all 
 					{
-						tester.put(nKey, agentAnswer.get(nKey));
-					}
-					else
-					{
-						if(agentAnswer.get(nKey) != tester.get(nKey))
+						if(tester.get(nKey) == null)
 						{
-							//conflit 
-							addToCouleurNonVoulue(agentCouleurNonVoulue, key, nKey, agentAnswer.get(nKey));
-							conflit = true;
-							break agentloop;
+							tester.put(nKey, agentAnswer.get(nKey));
 						}
 						else
 						{
-							TreeSet<Integer> keyNoeuds = noeuds.get(nKey);
-							Integer masterColor = tester.get(nKey);
-							for(Integer color : keyNoeuds)
+							if(agentAnswer.get(nKey) != tester.get(nKey))
 							{
-								if(color == masterColor)
+								//conflit 
+								addToCouleurNonVoulue(agentCouleurNonVoulue, key, nKey, agentAnswer.get(nKey));
+								conflit = true;
+								break agentloop;
+							}
+							else
+							{
+								TreeSet<Integer> keyNoeuds = noeuds.get(nKey);
+								Integer masterColor = tester.get(nKey);
+								for(Integer color : keyNoeuds)
 								{
-									conflit = true;
-									addToCouleurNonVoulue(agentCouleurNonVoulue, key, nKey, agentAnswer.get(nKey));
-									break agentloop;
+									if(color == masterColor)
+									{
+										conflit = true;
+										addToCouleurNonVoulue(agentCouleurNonVoulue, key, nKey, agentAnswer.get(nKey));
+										break agentloop;
+									}
 								}
 							}
 						}
 					}
 				}
-			}
-			if(conflit)
-			{
-				//restart l'algo ac les nouvelle list de bad colors
-				//send message to all agents with the new notWantedcolor list 
-				//or send message that job's done
-				for(String agentKey : agentCouleurNonVoulue.keySet())
+				if(conflit)
 				{
-					TreeMap< Integer, TreeSet<Integer>> badcolors = agentCouleurNonVoulue.get(agentKey);
-					ACLMessage msgAnswer = new ACLMessage(ACLMessage.REQUEST);
-					//msgAnswer.setContent(data);
-					msgAnswer.addReceiver( new AID( agentKey, AID.ISLOCALNAME) );
-				    agent.send(msgAnswer);
+					//restart l'algo ac les nouvelle list de bad colors
+					//send message to all agents with the new notWantedcolor list 
+					//or send message that job's done
+					for(String agentKey : agentCouleurNonVoulue.keySet())
+					{
+						TreeMap< Integer, TreeSet<Integer>> badcolors = agentCouleurNonVoulue.get(agentKey);
+						ACLMessage msgAnswer = new ACLMessage(ACLMessage.REQUEST);
+						msgAnswer.setContent(CentralIntelligenceAgency.graphToString(badcolors));
+						msgAnswer.addReceiver( new AID( agentKey, AID.ISLOCALNAME) );
+					    agent.send(msgAnswer);
+					}
+					
 				}
-				
-			}
-			else
-			{
-				boolean tmp = true;
-				for(int i = 0;i<size;i++)
+				else
 				{
-					if(tester.get(i) == null)
-						tmp = false;
+					boolean tmp = true;
+					for(int i = 0;i<size;i++)
+					{
+						if(tester.get(i) == null)
+							tmp = false;
+					}
+					done = tmp;
 				}
-				done = tmp;
 			}
+		}
+		else
+		{
+			block();
 		}
 	}
 	
