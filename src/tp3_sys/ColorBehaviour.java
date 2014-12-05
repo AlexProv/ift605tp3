@@ -51,6 +51,10 @@ public class ColorBehaviour extends MessagingBehaviour{
 				done = true;
 			}
 	    }
+	    else
+	    {
+	    	block();
+	    }
 	    
 	}
 

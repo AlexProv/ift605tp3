@@ -66,7 +66,7 @@ public class ArbitreBehaviour extends MessagingBehaviour{
 						}
 						else
 						{
-							if(agentAnswer.get(nKey) != tester.get(nKey))
+							if(!agentAnswer.get(nKey).equals(tester.get(nKey)))
 							{
 								//conflit 
 								addToCouleurNonVoulue(agentCouleurNonVoulue, key, nKey, agentAnswer.get(nKey));
@@ -79,7 +79,7 @@ public class ArbitreBehaviour extends MessagingBehaviour{
 								Integer masterColor = tester.get(nKey);
 								for(Integer color : keyNoeuds)
 								{
-									if(color == masterColor)
+									if(color.equals(masterColor))
 									{
 										conflit = true;
 										addToCouleurNonVoulue(agentCouleurNonVoulue, key, nKey, agentAnswer.get(nKey));

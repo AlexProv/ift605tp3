@@ -30,8 +30,8 @@ public class AgentArbitre extends Agent{
 		TreeMap<Integer, TreeSet<Integer>> cN = new TreeMap<Integer, TreeSet<Integer>>();
 		
 		Iterator it = noeuds.entrySet().iterator();
-		int cpt = 0;
-		while(it.hasNext())
+
+		for(int cpt = 0; it.hasNext(); ++cpt)
 		{
 	        Map.Entry pairs = (Map.Entry)it.next();
 			if(cpt < 8)
