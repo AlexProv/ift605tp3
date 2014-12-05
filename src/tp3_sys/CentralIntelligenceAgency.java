@@ -1,6 +1,5 @@
 package tp3_sys;
 
-import jade.core.AgentContainer;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.wrapper.AgentController;
@@ -9,10 +8,8 @@ import jade.wrapper.ContainerController;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -35,13 +32,11 @@ public class CentralIntelligenceAgency {
 		TreeMap<Integer, TreeSet<Integer> > graph = graphBuilder(data);
 
 		jade.core.Runtime rt = jade.core.Runtime.instance();
+	    rt.setCloseVM(true);
 		Profile p = new ProfileImpl();
 
 		ContainerController cc = rt.createMainContainer(p);
-		
-		//TreeMap<Integer, TreeSet<Integer> > noeuds;
-		//noeuds = new TreeMap<Integer, TreeSet<Integer>>();
-		
+
 		try{
 			Object[] oArbitre = new Object[2];
 			oArbitre[0] = cc;
@@ -126,12 +121,36 @@ public class CentralIntelligenceAgency {
 			 TreeSet<Integer> set = entry.getValue();
 			 for(Integer value : set)
 			 {
-				 if(key < value)
-				 {
-					 strGraph += key + " " + value + "\n";
-				 }
+				 strGraph += key + " " + value + "\n";
 			 }
 		 }
 		 return strGraph;
 	 }
+	 
+	 static public TreeMap<Integer, TreeSet<Integer>> stringToGraph(String str)
+	 {
+		 TreeMap<Integer, TreeSet<Integer> > tmpNoeuds = new TreeMap<Integer, TreeSet<Integer> >();
+		 
+		 StringTokenizer tokenizer = new StringTokenizer(str);
+		 
+		 while (tokenizer.hasMoreTokens()) {
+			 Integer token = Integer.parseInt(tokenizer.nextToken());
+			 Integer token1 = Integer.parseInt(tokenizer.nextToken());
+			 addBadColor(token,token1,tmpNoeuds);
+	     }
+		 
+		 return tmpNoeuds;
+	 }
+	 
+	 static private void addBadColor(Integer a, Integer b,TreeMap<Integer, TreeSet<Integer> > noeuds)
+	 {
+		 TreeSet<Integer> tmp = noeuds.get(a);
+		 if(tmp == null)
+		 {
+			 tmp = new TreeSet<Integer>();
+		 }
+		 tmp.add(b);
+		 noeuds.put(a, tmp);
+	 }
+
 }

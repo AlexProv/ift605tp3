@@ -3,6 +3,7 @@ package tp3_sys;
 import jade.core.Agent;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
+import jade.wrapper.StaleProxyException;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -50,11 +51,10 @@ public class AgentArbitre extends Agent{
 				}
 			}
 		}
-		//end procesing tree 
+		//end processing tree 
 		//ready to start agents
 		
-		ArbitreBehaviour arbitreBehaviour = new ArbitreBehaviour(this,taille,noeuds);
-		this.addBehaviour(arbitreBehaviour);
+		this.addBehaviour(new ArbitreBehaviour(this,taille,noeuds));
 		try{
 			
 			o1[0] = aN;

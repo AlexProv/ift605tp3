@@ -2,19 +2,21 @@ package tp3_sys;
 
 import jade.core.AID;
 import jade.core.Agent;
-//import jade.domain.introspection.ACLMessage;
+import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
 import java.util.Random;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-public class ArbitreBehaviour extends MessagingBehaviour{
+public class ArbitreBehaviour extends Behaviour {
 
+	private static final long serialVersionUID = -7958667562651848671L;
 	protected Agent agent;
 	boolean done;
 	int size; 
 	TreeMap<Integer, TreeSet<Integer>> noeuds;
+	TreeMap<Integer, Integer> tester;
 	
 	public ArbitreBehaviour(Agent a,int size,TreeMap<Integer, TreeSet<Integer>> noeuds) {
 		super(a);
@@ -22,6 +24,7 @@ public class ArbitreBehaviour extends MessagingBehaviour{
 		this.size = size;
 		this.noeuds = noeuds;
 		done = false;
+		tester = new TreeMap<Integer, Integer>();
 	}
 	
 	
@@ -51,7 +54,6 @@ public class ArbitreBehaviour extends MessagingBehaviour{
 				TreeMap<Integer, Integer> result = CentralIntelligenceAgency.stringToTree(resultData);
 				
 				agentResults.put(agentName, result);
-				TreeMap<Integer, Integer> tester = new TreeMap<Integer, Integer>();
 				
 				boolean conflit = false; 
 				agentloop: for(String key : agentResults.keySet())
@@ -64,9 +66,10 @@ public class ArbitreBehaviour extends MessagingBehaviour{
 						{
 							TreeSet<Integer> keyNoeuds = noeuds.get(nKey);
 							Integer masterColor = agentAnswer.get(nKey);
-							for(Integer color : keyNoeuds)
+							for(Integer colorKey : keyNoeuds)
 							{
-								if(color.equals(masterColor))
+								Integer color = tester.get(colorKey);
+								if(color == masterColor)
 								{
 									conflit = true;
 									addToCouleurNonVoulue(agentCouleurNonVoulue, key, nKey, agentAnswer.get(nKey));
@@ -89,9 +92,10 @@ public class ArbitreBehaviour extends MessagingBehaviour{
 							{
 								TreeSet<Integer> keyNoeuds = noeuds.get(nKey);
 								Integer masterColor = tester.get(nKey);
-								for(Integer color : keyNoeuds)
+								for(Integer colorKey : keyNoeuds)
 								{
-									if(color.equals(masterColor))
+									Integer color = tester.get(colorKey);
+									if(color == masterColor)
 									{
 										conflit = true;
 										addToCouleurNonVoulue(agentCouleurNonVoulue, key, nKey, agentAnswer.get(nKey));
@@ -120,7 +124,7 @@ public class ArbitreBehaviour extends MessagingBehaviour{
 				else
 				{
 					boolean tmp = true;
-					for(int i = 0;i<size;i++)
+					for(int i = 1;i<=size;i++)
 					{
 						if(tester.get(i) == null)
 							tmp = false;
@@ -165,16 +169,27 @@ public class ArbitreBehaviour extends MessagingBehaviour{
 	
 	@Override
 	public boolean done() {
-		String[] agents = new String[3];
-		agents[0] = "Agent1";
-		agents[1] = "Agent2";
-		agents[2] = "Agent3";
-		
-		for(String a : agents)
+		if(done)
 		{
-			ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-			msg.addReceiver( new AID( a, AID.ISLOCALNAME) );
-			agent.send(msg);
+			String[] agents = new String[3];
+			agents[0] = "Agent1";
+			agents[1] = "Agent2";
+			agents[2] = "Agent3";
+			
+			for(String a : agents)
+			{
+				ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+				msg.setContent("Beaucoup de sang.");
+				msg.addReceiver( new AID( a, AID.ISLOCALNAME) );
+				agent.send(msg);
+			}
+			System.out.println("Les couleurs sont\n(les differentes couleurs sont representees pare des nombres):");
+			for(Integer i : tester.keySet())
+			{
+				System.out.println("Noeud" + i + " = " + tester.get(i));
+			}
+			System.out.println("Fin de l'execution...");
+			System.exit(0);//La seule maniere de vraiment terminer l'execution trouve qui fonctionne. 
 		}
 		return done;
 	}

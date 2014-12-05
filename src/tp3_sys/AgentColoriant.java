@@ -6,6 +6,7 @@ import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.wrapper.StaleProxyException;
 
 import java.io.IOException;
 import java.util.TreeMap;
@@ -20,25 +21,15 @@ public class AgentColoriant extends Agent{
 		TreeMap< Integer, TreeSet<Integer>> couleurNonVoulue = (TreeMap< Integer, TreeSet<Integer>>)args[1];
 		String arbiter = (String)args[2];
 		
-		//public ColorBehaviour(Agent a, TreeMap< Integer, TreeSet<Integer>> noeuds,TreeMap< Integer, TreeSet<Integer>> couleurNonVoulue,String arbitre) 
 		addBehaviour(new ColorBehaviour(this,noeuds,couleurNonVoulue,arbiter));
-		
-        try {
-        	
-			Runtime.getRuntime().exec("clear");
-		} catch (IOException e) {
-			//TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
-	protected void TakeDown() 
+	protected void TakeDown()
 	{
 		//pour tuer l'agent quand on call delete.
 	}
 	
-	public AgentColoriant() {
-	}
+	public AgentColoriant() {}
 	
 
 }

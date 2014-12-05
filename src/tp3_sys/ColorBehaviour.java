@@ -11,8 +11,9 @@ import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
-public class ColorBehaviour extends MessagingBehaviour{
+public class ColorBehaviour extends Behaviour {
 	
+	private static final long serialVersionUID = 6344584290995192702L;
 	TreeMap< Integer, TreeSet<Integer>> noeuds;
 	Agent agent;
 	String agentLocalName;
@@ -44,11 +45,19 @@ public class ColorBehaviour extends MessagingBehaviour{
 	    {
 			if(arbiterAnswer.getPerformative() == ACLMessage.REQUEST)
 			{
-				couleurNonVoulue = null; //need to cast msg to couleurNonVoulue 
+				String content = arbiterAnswer.getContent();
+				if(content != null)
+				{
+					addBadColorToMap(couleurNonVoulue, CentralIntelligenceAgency.stringToGraph(content));	
+				}
 			}
 			else if(arbiterAnswer.getPerformative() == ACLMessage.INFORM)
 			{
-				done = true;
+				String content = arbiterAnswer.getContent();
+				if(content != null && content.indexOf("Beaucoup de sang.") != -1)
+				{
+					done = true;
+				}
 			}
 	    }
 	    else
@@ -61,44 +70,9 @@ public class ColorBehaviour extends MessagingBehaviour{
 	
 	@Override
 	public boolean done() {
-		// TODO Auto-generated method stub
 		return done;
 	}
-	
-	private TreeMap<Integer, Integer> initialisateurCouleur(int nbCouleur)
-	{
-		TreeMap<Integer, TreeSet<Integer>> couleurPossible = new TreeMap<Integer, TreeSet<Integer>>();
-		ArrayList<Integer> elementNonColorie = new ArrayList<Integer>();
 		
-		
-		for(Map.Entry<Integer, TreeSet<Integer>> entry : noeuds.entrySet())
-		{	
-			couleurPossible.put(entry.getKey(), new TreeSet<Integer>());
-			elementNonColorie.add(entry.getKey());
-		}
-		
-		
-		for(Map.Entry<Integer, TreeSet<Integer>> entry : couleurPossible.entrySet())
-		{
-			for(int i = 0; i < nbCouleur; ++i)
-			{
-				entry.getValue().add(i);
-			}
-		}
-		
-		
-		TreeMap<Integer, Integer> resultat = colorieur(new TreeMap<Integer, Integer>(), couleurPossible);
-		if(resultat == null)
-		{
-			//TODO envoye erreur pas possible colorier avec si peu de couleur
-		}
-		else
-		{
-			// OK!
-		}
-		return resultat;
-	}
-	
 	
 	private TreeMap<Integer, Integer> notWantedColor(int nbCouleur, TreeMap< Integer, TreeSet<Integer>> couleurNonVoulue)
 	{
@@ -191,6 +165,27 @@ public class ColorBehaviour extends MessagingBehaviour{
 		}
 		
 		return null;
+	}
+	
+	private void addBadColorToMap(TreeMap<Integer, TreeSet<Integer>> badColors, TreeMap<Integer, TreeSet<Integer>> newBadColors)
+	{
+		for(Map.Entry<Integer, TreeSet<Integer>> entry : newBadColors.entrySet())
+		{
+			TreeSet<Integer> tmp = badColors.get(entry.getKey());
+			if(tmp == null)
+			{
+				tmp = new TreeSet<Integer>();
+				tmp = entry.getValue();
+			}
+			else
+			{
+				for(Integer color:entry.getValue())
+				{
+					tmp.add(color);
+				}
+			}
+			badColors.put(entry.getKey(), tmp);
+		}
 	}
 
 }
