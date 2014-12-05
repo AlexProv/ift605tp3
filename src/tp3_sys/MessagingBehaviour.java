@@ -20,14 +20,14 @@ public class MessagingBehaviour extends Behaviour {
 		ACLMessage  msg = myAgent.receive();
 		if(msg != null){
 
-			agent.send(formateReplyWithLog(msg));
+			agent.send(formateReplyWithLog(msg,null,null));
 		}
 		else {
 			block();
 		}
 	}
 	
-	protected ACLMessage formateReplyWithLog(ACLMessage msg)
+	protected ACLMessage formateReplyWithLog(ACLMessage msg,Agent toAgent, String msgContent)
 	{
 		ACLMessage reply = msg.createReply();
 
@@ -56,7 +56,7 @@ public class MessagingBehaviour extends Behaviour {
 		return reply;
 	}
 	
-	protected ACLMessage formateReply(ACLMessage msg)
+	protected ACLMessage formateReply(ACLMessage msg,Agent toAgent, String msgContent)
 	{
 		ACLMessage reply = msg.createReply();
 
@@ -64,13 +64,12 @@ public class MessagingBehaviour extends Behaviour {
 			String content = msg.getContent();
 			if ((content != null) && (content.indexOf("alive") != -1)){
 				reply.setPerformative(ACLMessage.INFORM);
-				reply.setContent("alive");
+				reply.setContent(msgContent);
 			}
 			else{
 				reply.setPerformative(ACLMessage.REFUSE);
 				reply.setContent("( UnexpectedContent (" + content + "))");
 			}
-
 		}
 		else {
 			reply.setPerformative(ACLMessage.NOT_UNDERSTOOD);

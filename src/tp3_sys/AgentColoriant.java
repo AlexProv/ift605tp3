@@ -1,6 +1,7 @@
 package tp3_sys;
 
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -16,8 +17,11 @@ public class AgentColoriant extends Agent{
 	{
 		Object[] args = getArguments();
 		TreeMap< Integer, TreeSet<Integer> > noeuds = (TreeMap< Integer, TreeSet<Integer> >)args[0];
+		TreeMap< Integer, TreeSet<Integer>> couleurNonVoulue = (TreeMap< Integer, TreeSet<Integer>>)args[1];
+		String arbiter = (String)args[2];
 		
-		addBehaviour(new ColorBehaviour(this,noeuds));
+		//public ColorBehaviour(Agent a, TreeMap< Integer, TreeSet<Integer>> noeuds,TreeMap< Integer, TreeSet<Integer>> couleurNonVoulue,String arbitre) 
+		addBehaviour(new ColorBehaviour(this,noeuds,couleurNonVoulue,arbiter));
 		
         try {
         	
@@ -35,5 +39,6 @@ public class AgentColoriant extends Agent{
 	
 	public AgentColoriant() {
 	}
+	
 
 }

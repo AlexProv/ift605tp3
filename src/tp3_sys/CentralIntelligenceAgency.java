@@ -39,54 +39,14 @@ public class CentralIntelligenceAgency {
 
 		ContainerController cc = rt.createMainContainer(p);
 		
-		TreeMap<Integer, TreeSet<Integer> > noeuds;
-		noeuds = new TreeMap<Integer, TreeSet<Integer>>();
+		//TreeMap<Integer, TreeSet<Integer> > noeuds;
+		//noeuds = new TreeMap<Integer, TreeSet<Integer>>();
 		
 		try{
-			Object[] oArbitre = new Object[1];
-			Object[] o1 = new Object[1];
-			Object[] o2 = new Object[1];
-			Object[] o3 = new Object[1];
-			Set<Integer> noeudsKeys = noeuds.keySet(); 
-			int taille = noeudsKeys.size() / NB_AGENT;
-			
-			TreeMap<Integer, TreeSet<Integer>> aN = new TreeMap<Integer, TreeSet<Integer>>();
-			TreeMap<Integer, TreeSet<Integer>> bN = new TreeMap<Integer, TreeSet<Integer>>();
-			TreeMap<Integer, TreeSet<Integer>> cN = new TreeMap<Integer, TreeSet<Integer>>();
-			
-			Iterator it = noeuds.entrySet().iterator();
-			int cpt = 0;
-			while(it.hasNext())
-			{
-		        Map.Entry pairs = (Map.Entry)it.next();
-				if(cpt < 8)
-				{
-					aN.put((Integer)pairs.getKey(),(TreeSet<Integer>)pairs.getValue());
-				}
-				else
-				{
-					if(cpt < 13)
-					{
-						bN.put((Integer)pairs.getKey(),(TreeSet<Integer>)pairs.getValue());
-					}
-					else
-					{
-						cN.put((Integer)pairs.getKey(),(TreeSet<Integer>)pairs.getValue());
-					}
-				}
-			}
-			o1[0] = aN;
-			o1[0] = graph;
-			AgentController a1 = cc.createNewAgent("Agent1", AgentColoriant.class.getName(), o1);
-			o2[0] = bN;
-			AgentController a2 = cc.createNewAgent("Agent2", AgentColoriant.class.getName(), o2);
-			o3[0] = cN;
-			AgentController a3 = cc.createNewAgent("Agent3", AgentColoriant.class.getName(), o3);
-
+			Object[] oArbitre = new Object[2];
+			oArbitre[0] = cc;
+			oArbitre[1] = graph;
 			AgentController aArbitre = cc.createNewAgent("AgentArbitre", AgentArbitre.class.getName(), oArbitre);
-			a1.start();
-			a2.start();
-			a3.start();
 			aArbitre.start();
 		}
 		catch(Exception e){
@@ -129,12 +89,8 @@ public class CentralIntelligenceAgency {
 		 StringTokenizer tokenizer = new StringTokenizer(fichierTexte);
 		 
 		 while (tokenizer.hasMoreTokens()) {
-			 //System.out.println(tokenizer.nextToken());
-			 //System.out.println(tokenizer.nextToken());
 			 Integer token = Integer.parseInt(tokenizer.nextToken());
 			 Integer token1 = Integer.parseInt(tokenizer.nextToken());
-			 //System.out.println(tokenizer.nextToken());
-			 
 			 ajouterNoeud(token,token1,tmpNoeuds);
 	     }
 		 

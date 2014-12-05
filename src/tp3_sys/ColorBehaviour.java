@@ -6,7 +6,9 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
+import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
 public class ColorBehaviour extends MessagingBehaviour{
@@ -14,44 +16,50 @@ public class ColorBehaviour extends MessagingBehaviour{
 	TreeMap< Integer, TreeSet<Integer>> noeuds;
 	Agent agent;
 	String agentLocalName;
+	TreeMap< Integer, TreeSet<Integer>> couleurNonVoulue;
+	String arbitre;
+	boolean done = false;
 	
-	public ColorBehaviour(Agent a, TreeMap< Integer, TreeSet<Integer>> noeuds) {
+	public ColorBehaviour(Agent a, TreeMap< Integer, TreeSet<Integer>> noeuds,TreeMap< Integer, TreeSet<Integer>> couleurNonVoulue,String arbitre) {
 		super(a);
 		this.agent = a; 
 		this.noeuds = noeuds;
+		this.couleurNonVoulue = couleurNonVoulue;
+		this.arbitre = arbitre;
 	}
 	
 
 	@Override
 	public void action() {
-		// TODO Auto-generated method stub
 		
-		ACLMessage  msg = myAgent.receive();
-		if(msg != null){
-
-			agent.send(formateReplyWithLog(msg));
-			
-		}
-		else {
-			block();
-		}
-		
-		TreeMap<Integer, Integer> test = initialisateurCouleur(100);
-		TreeMap< Integer, TreeSet<Integer>> cnv = new TreeMap< Integer, TreeSet<Integer>>();
-		TreeSet<Integer> a = new TreeSet<Integer>();
-		a.add(0);
-		cnv.put(1, a);
-		a = new TreeSet<Integer>();
-		a.add(0);
-		cnv.put(2, a);
-		TreeMap<Integer, Integer> testa = notWantedColor(100, cnv);
-		System.out.println("a");
-		//equivalent de ton RUN dans un thread Ben
-		System.out.println("ben travail!");
-		
+		TreeMap<Integer, Integer> answer = notWantedColor(100, couleurNonVoulue);
+		String data = CentralIntelligenceAgency.treeToString(answer);
+		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+		msg.setContent(data);
+        msg.addReceiver( new AID( arbitre, AID.ISLOCALNAME) );
+	    agent.send(msg);
+	    
+	    ACLMessage arbiterAnswer = agent.receive();
+	    if(arbiterAnswer!=null)
+	    {
+			if(arbiterAnswer.getPerformative() == ACLMessage.REQUEST)
+			{
+				couleurNonVoulue = null; //need to cast msg to couleurNonVoulue 
+			}
+			else if(arbiterAnswer.getPerformative() == ACLMessage.INFORM)
+			{
+				done = true;
+			}
+	    }
+	    
 	}
 
 	
+	@Override
+	public boolean done() {
+		// TODO Auto-generated method stub
+		return done;
+	}
 	
 	private TreeMap<Integer, Integer> initialisateurCouleur(int nbCouleur)
 	{
@@ -86,7 +94,6 @@ public class ColorBehaviour extends MessagingBehaviour{
 		}
 		return resultat;
 	}
-	
 	
 	
 	private TreeMap<Integer, Integer> notWantedColor(int nbCouleur, TreeMap< Integer, TreeSet<Integer>> couleurNonVoulue)
