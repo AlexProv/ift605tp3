@@ -121,7 +121,7 @@ public class CentralIntelligenceAgency {
 		 return tree;
 	}
 	
-	 
+
 	 static public TreeMap<Integer, TreeSet<Integer> > graphBuilder(String fichierTexte)
 	 {
 		 TreeMap<Integer, TreeSet<Integer> > tmpNoeuds = new TreeMap<Integer, TreeSet<Integer> >();
@@ -158,5 +158,24 @@ public class CentralIntelligenceAgency {
 		 }
 		 tmp.add(a);
 		 noeuds.put(b, tmp);
+	 }
+
+
+	 static public String graphToString(TreeMap<Integer, TreeSet<Integer> > noeuds)
+	 {
+		 String strGraph = "";
+		 for(Map.Entry<Integer,TreeSet<Integer>> entry : noeuds.entrySet())
+		 {
+			 Integer key = entry.getKey();
+			 TreeSet<Integer> set = entry.getValue();
+			 for(Integer value : set)
+			 {
+				 if(key < value)
+				 {
+					 strGraph += key + " " + value + "\n";
+				 }
+			 }
+		 }
+		 return strGraph;
 	 }
 }
