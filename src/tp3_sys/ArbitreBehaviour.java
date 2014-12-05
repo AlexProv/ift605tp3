@@ -62,7 +62,19 @@ public class ArbitreBehaviour extends MessagingBehaviour{
 					{
 						if(tester.get(nKey) == null)
 						{
+							TreeSet<Integer> keyNoeuds = noeuds.get(nKey);
+							Integer masterColor = agentAnswer.get(nKey);
+							for(Integer color : keyNoeuds)
+							{
+								if(color.equals(masterColor))
+								{
+									conflit = true;
+									addToCouleurNonVoulue(agentCouleurNonVoulue, key, nKey, agentAnswer.get(nKey));
+									break agentloop;
+								}
+							}
 							tester.put(nKey, agentAnswer.get(nKey));
+							
 						}
 						else
 						{
